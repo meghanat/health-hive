@@ -1,6 +1,8 @@
 var express = require('express')
 var app = express()
 fileUpload = require('express-fileupload');
+const uuidV1 = require('uuid/v1');
+
 app.use(fileUpload());
 
 // respond with "hello world" when a GET request is made to the homepage
@@ -14,9 +16,10 @@ app.post('/upload', function(req, res) {
  
   // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file 
  sampleFile = req.files.sampleFile;
+ console.log(req.files.sampleFile.name)
  
   // Use the mv() method to place the file somewhere on your server 
-  sampleFile.mv('data/here.txt', function(err) {
+  sampleFile.mv('data/'+uuidV1()+'.txt', function(err) {
     if (err)
       return res.status(500).send(err);
  
