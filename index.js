@@ -1,15 +1,20 @@
-var express = require('express')
-var app = express()
+const express = require('express')
+var path = require('path');
+const passport = require('passport')  
+const session = require('express-session') 
+const app = express()
 fileUpload = require('express-fileupload');
 const uuidV1 = require('uuid/v1');
 
 app.use(fileUpload());
-
+app.use(express.static('public'))
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function (req, res) {
-  res.sendfile('public/fileupload.html');
+  res.sendfile( path.join( __dirname, 'public','login', 'index.html' ));
 })
-
+app.get('/home', function (req, res) {
+  res.sendfile( path.join( __dirname, 'public','login', 'index.html' ));
+})
 app.post('/upload', function(req, res) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
