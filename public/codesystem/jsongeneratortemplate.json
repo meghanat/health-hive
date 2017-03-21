@@ -1,0 +1,15 @@
+{
+  codeSystem:"",
+    codeSystemName:'{{lorem(1,"words")}}',
+      description:'{{lorem(2,"sentences")}}',
+
+    codes:[
+     '{{repeat(100, 120)}}',
+      {
+        code:'{{guid()}}',
+      codeName:'{{lorem(1,"words")}}',
+      description:'{{lorem(1,"sentences")}}'
+      }
+        
+       ]
+}

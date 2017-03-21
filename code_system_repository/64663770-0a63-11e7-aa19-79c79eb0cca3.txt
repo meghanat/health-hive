@@ -1,0 +1,12 @@
+code,description
+1,"Vataja"
+2,"Pittaja"
+3,"Kaphaja"
+4,"Vatapittaja"
+5,"Pittakaphaja"
+6,"Vayakaphaja"
+7,"Vatapittakaphaja"
+8,"Pittavataja"
+9,"Kaphapittaja"
+10,"Kaphavataja"
+11,"Not mentioned"
