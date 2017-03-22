@@ -16,11 +16,11 @@ app.get('/', function(req, res) {
 app.get('/home', function(req, res) {
 		res.sendfile(path.join(__dirname, 'public', 'login', 'index.html'));
 })
-app.get("/upload", function(req, res) {
+app.get("/codesystem", function(req, res) {
 		res.sendfile(path.join(__dirname, 'public', 'codesystem', 'fileupload.html'));
 
 })
-app.post('/upload', function(req, res) {
+app.post('/codesystem', function(req, res) {
 	if (!req.files)
 		return res.status(400).send('No files were uploaded.');
 	sampleFile = req.files.sampleFile;
@@ -42,6 +42,18 @@ app.post('/upload', function(req, res) {
 
 	
 });
+
+app.get("/data", function(req, res) {
+		res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'csvfileupload.html'));
+
+})
+app.post('/data', function(req, res) {
+	if (!req.files)
+		return res.status(400).send('No files were uploaded.');
+	console.log(req.files)
+	
+});
+
 
 
 
