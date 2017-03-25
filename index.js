@@ -6,6 +6,20 @@ const app = express()
 fileUpload = require('express-fileupload');
 const uuidV1 = require('uuid/v1');
 var MongoClient = require('mongodb').MongoClient , format = require('util').format;
+var exec = require('child_process').exec;
+var WebHDFS = require('webhdfs');
+var fs=require('fs')
+
+// Create a new
+var hdfs = WebHDFS.createClient({
+  user: 'hduser', // Hadoop user
+  host: 'localhost', // Namenode host
+  port: 3396 // Namenode port
+});
+
+module.exports = hdfs;
+
+
 
 app.use(fileUpload());
 app.use(express.static('public'))
@@ -43,6 +57,29 @@ app.post('/codesystem', function(req, res) {
 	
 });
 
+app.post('/metadata', function(req, res) {
+	if (!req.files)
+		return res.status(400).send('No files were uploaded.');
+	sampleFile = req.files.sampleFile;
+	codeSystem = JSON.parse(req.files.sampleFile.data)
+	codeSystemOID = uuidV1()
+	codeSystem["codeSystem"] = codeSystemOID
+
+	MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+	  	if (err) throw err;
+	  		console.log("Connected to Database");
+	  
+		//insert record
+		db.collection('metadata').insert(codeSystem, function(err, records) {
+			if (err) throw err;
+			console.log("Record added");
+			res.send('File uploaded! <br/><br/>Code System Code : ' + codeSystemOID);
+		});
+	});
+
+	
+});
+
 app.get("/data", function(req, res) {
 		res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'csvfileupload.html'));
 
@@ -50,9 +87,33 @@ app.get("/data", function(req, res) {
 app.post('/data', function(req, res) {
 	if (!req.files)
 		return res.status(400).send('No files were uploaded.');
-	console.log(req.files)
-	
+	for(var file in req.files.sampleFile){
+		console.log("file:",req.files.sampleFile[file])
+		filename="data/"+req.files.sampleFile[file].name
+		console.log("filename:",filename)
+		req.files.sampleFile[file].mv(filename,function(err) {
+    		if (err)
+      			return res.status(500).send(err);
+ 
+		    
+		});
+
+		
+	}
 });
+
+	// var child;
+
+	// child = exec("ls -la",
+ //  	 function (error, stdout, stderr) {
+ //      console.log('stdout: ' + stdout);
+ //      console.log('stderr: ' + stderr);
+ //      if (error !== null) {
+ //          console.log('exec error: ' + error);
+ //      }
+ //   });
+
+
 
 
 
