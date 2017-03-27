@@ -14,7 +14,7 @@ var fs=require('fs')
 var hdfs = WebHDFS.createClient({
   user: 'hduser', // Hadoop user
   host: 'localhost', // Namenode host
-  port: 3396 // Namenode port
+  port: 50070 // Namenode port
 });
 
 module.exports = hdfs;
@@ -87,13 +87,44 @@ app.get("/data", function(req, res) {
 app.post('/data', function(req, res) {
 	if (!req.files)
 		return res.status(400).send('No files were uploaded.');
+	count =0;
+	filenames=[];
+
+	no_files=req.files.sampleFile.length
 	for(var file in req.files.sampleFile){
+
 		console.log("file:",req.files.sampleFile[file])
-		filename="data/"+req.files.sampleFile[file].name
+		filename=req.files.sampleFile[file].name
+		filename_path="data/"+filename;
+		filenames.push(filename);
 		console.log("filename:",filename)
-		req.files.sampleFile[file].mv(filename,function(err) {
+		req.files.sampleFile[file].mv(filename_path,function(err) {
     		if (err)
       			return res.status(500).send(err);
+      		count+=1;
+      		if(count==no_files){
+
+      			for(i in filenames){
+
+      				local_path="data/"+filenames[i]
+      				remote_path="/user/hive/data/"+filenames[i]
+      				var localFileStream = fs.createReadStream(local_path);
+					var remoteFileStream = hdfs.createWriteStream(remote_path);
+					 
+					localFileStream.pipe(remoteFileStream);
+					 
+					remoteFileStream.on('error', function onError (err) {
+					  // Do something with the error 
+					  console.log("error:",err)
+					});
+					 
+					remoteFileStream.on('finish', function onFinish () {
+					  // Upload is done 
+					  console.log("uploaded file");
+					});
+      			}
+
+      		}
  
 		    
 		});
