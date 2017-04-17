@@ -9,6 +9,7 @@ var MongoClient = require('mongodb').MongoClient , format = require('util').form
 var exec = require('child_process').exec;
 var WebHDFS = require('webhdfs');
 var fs=require('fs')
+var hive = require('thrift-hive');
 
 // Create a new
 var hdfs = WebHDFS.createClient({
@@ -84,6 +85,9 @@ app.get("/data", function(req, res) {
 		res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'csvfileupload.html'));
 
 })
+
+
+
 app.post('/data', function(req, res) {
 	if (!req.files)
 		return res.status(400).send('No files were uploaded.');
@@ -91,23 +95,27 @@ app.post('/data', function(req, res) {
 	filenames=[];
 
 	no_files=req.files.sampleFile.length
+	console.log("no files:",no_files)
 	for(var file in req.files.sampleFile){
 
-		console.log("file:",req.files.sampleFile[file])
-		filename=req.files.sampleFile[file].name
+
+		file=req.files.sampleFile[file]
+
+		filename=file.name
 		filename_path="data/"+filename;
-		filenames.push(filename);
-		console.log("filename:",filename)
-		req.files.sampleFile[file].mv(filename_path,function(err) {
+		filenames.push(filename)
+		
+		file.mv(filename_path,function(err) {
     		if (err)
       			return res.status(500).send(err);
       		count+=1;
       		if(count==no_files){
-
+      			console
       			for(i in filenames){
 
       				local_path="data/"+filenames[i]
       				remote_path="/user/hive/data/"+filenames[i]
+      				console.log("remote:",remote_path," local: ",local_path)
       				var localFileStream = fs.createReadStream(local_path);
 					var remoteFileStream = hdfs.createWriteStream(remote_path);
 					 
