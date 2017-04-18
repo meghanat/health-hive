@@ -1,0 +1,5 @@
+synch/api/Saying.class
+synch/health/TemplateHealthCheck.class
+synch/hiveClientApplication.class
+synch/hiveClientConfiguration.class
+synch/resources/HelloWorldResource.class

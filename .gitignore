@@ -1,5 +1,5 @@
 #Data
-data/*
+java/data/*
 
 # Logs
 logs
@@ -31,6 +31,7 @@ build/Release
 
 # Dependency directories
 node_modules
+public/bower_components
 jspm_packages
 
 # Optional npm cache directory
@@ -38,3 +39,4 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
