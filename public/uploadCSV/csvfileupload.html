@@ -5,8 +5,21 @@
       action='http://localhost:3000/data' 
       method='post' 
       encType="multipart/form-data">
+      <div style="margin:1em">
+      <label>
+        Upload CSV Files<br/>
         <input type="file" name="sampleFile"  multiple/>
+      </label>
+      <BR/>
+    </div>
+    <div style="margin:1em">
+      <label>
+        Upload Metadata File<br/>
+        <input type="file" name="metadataFile"/>
+      </label>
+      <br/>
         <input type='submit' value='Upload!' />
+      </div>
     </form>     
   </body>
 </html>

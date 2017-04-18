@@ -1,9 +1,15 @@
+import org.json.*;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,36 +20,84 @@ import java.util.concurrent.TimeUnit;
 public class HiveClient {
   private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
+  //if database does not exist, create database
+  private static void createDatabase(String databaseName){
+    try{ 
+        Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "", "");
+        Statement stmt = con.createStatement();
+    
+            ResultSet res;
+            String sql = "create database if not exists "+ databaseName;
+            stmt.execute(sql);
+            System.out.println("database "+databaseName+" created");
+
+           
+    }
+    catch(Exception e){
+            
+            System.out.println(e.getMessage());            
+    }
+
+  }
+
   /**
    * @param args
    * @throws SQLException
    */
   public static void main(String[] args) throws SQLException {
-    Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "", "");
-    Statement stmt = con.createStatement();
+
+    //get folder name
+    String folderName=args[0];
+    String metaDataFilePath=folderName+"/metadata.json";
+    String databaseName="";//same as the name of the organisation
+    System.out.println(metaDataFilePath);
     try{
-            System.out.println("get request received");
-            String resString="";
-            ResultSet res;
-            // show tables
-            String sql = "show tables";
-            resString+="Running: " + sql;
-            System.out.println(resString);
-            res= stmt.executeQuery(sql);
-            if (res.next()) {
-              resString+=res.getString(1);
-              System.out.println(resString);
-            }
-            System.out.println(resString);
+        String metadata=new String(Files.readAllBytes(Paths.get(metaDataFilePath)));
+        System.out.println(metadata);  
+        JSONObject obj = new JSONObject(metadata);
+        databaseName = obj.getString("organisation");
+        System.out.println(databaseName);
+        createDatabase(databaseName);
+  
+    }
+    catch(IOException e){
+        e.printStackTrace();
+    }
+    catch(JSONException e){
+        e.printStackTrace();
+    }
+
+
+
+
+
+
+    // Connection con = DriverManager.getConnection("jdbc:hive2://localhost:10000/default", "", "");
+    // 
+
+    // try{
+    //         System.out.println("get request received");
+    //         String resString="";
+    //         ResultSet res;
+    //         // show tables
+    //         String sql = "show tables";
+    //         resString+="Running: " + sql;
+    //         System.out.println(resString);
+    //         res= stmt.executeQuery(sql);
+    //         if (res.next()) {
+    //           resString+=res.getString(1);
+    //           System.out.println(resString);
+    //         }
+    //         System.out.println(resString);
            
-        }
-        catch(Exception e){
+    //     }
+    //     catch(Exception e){
             
-            System.out.println(e.getMessage());
+    //         System.out.println(e.getMessage());
             
             
-        }
-    // String tableName = "testHiveDriverTable";
+    //     }
+    // // String tableName = "testHiveDriverTable";
     // // stmt.execute("drop table if exists " + tableName);
     // // stmt.execute("create table " + tableName + " (key int, value string)");
     // // show tables

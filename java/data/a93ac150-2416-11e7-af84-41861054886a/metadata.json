@@ -1,0 +1,13 @@
+{
+	"organisation":"ABC",
+	"tables":[
+			{
+				"name":"sample",
+			 	"filename":"sample.csv"
+			},
+			{
+				"name":"sample2",
+				"filename":"sample2.csv"		
+			}
+		]
+}
