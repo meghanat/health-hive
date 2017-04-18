@@ -36,6 +36,19 @@ public class HiveClient {
 		return query;
 	}
 
+	//delete temp directory
+	private static void deleteDir(File file) {
+
+    	File[] contents = file.listFiles();
+    	if (contents != null) {
+        	for (File f : contents) {
+            	deleteDir(f);
+        	}
+    	}
+    	file.delete();
+    	System.out.println("directory deleted");
+	}
+
 	//remove CSV header
 	public static void removeFirstLine(String fileName) throws IOException {  
 
@@ -161,6 +174,11 @@ public class HiveClient {
 			createTable(createQuery,folderName,fileName,tableName,databaseName);
 			fileReader.close();	
 		}
+		//delete folder and files
+		File directory = new File(folderName);
+		deleteDir(directory);
+
+
 	}
 	catch(IOException e){
 		e.printStackTrace();
