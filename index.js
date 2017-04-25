@@ -77,7 +77,25 @@ app.get("/data", function(req, res) {
 
 })
 
+app.get("/generateCDA",function(req,res){
+    res.sendfile(path.join(__dirname, 'public', 'cda_generation', 'cda_generation.html'));
 
+})
+app.post("/cda",function(req,res){
+    req.body.patient_id;
+    patient_id=req.body.patient_id;
+    unique_file =uuidV1()+"_"+patient_id+".xml";
+    command="java CDAGenerator "+patient_id+" iad "+unique_file;
+    exec(command, {
+                        cwd: "java"
+                    }, function(err, stdout, stderror) {
+                        if(err){
+                            console.log(stderror)
+                        }
+                        console.log(stdout)
+                        res.send("Ok")
+                    })
+})
 
 
 
