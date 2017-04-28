@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:ClinicalDocument xmlns:ns2="urn:hl7-org:v3">
+    <id extension="5" root="1.1.1.1.1"/>
+    <title>Patient Health Record</title>
+    <effectiveTime value="20170426"/>
+</ns2:ClinicalDocument>
