@@ -22,6 +22,8 @@ import java.time.ZoneId;
 
 import javax.xml.bind.JAXBException;
 
+import cdaTemplate.*;
+
 
 
 public class CDAGenerator {
@@ -88,20 +90,20 @@ public class CDAGenerator {
 		String fileName=args[2];
 		System.out.println(args[0]+args[1]+args[2]);
 
-		ClinicalDocument doc=new ClinicalDocument();
-		doc.setId(patientID,"1.1.1.1.1");
-		doc.setTitle("Patient Health Record");
-		doc.setEffectiveTime(getEffectiveTime());
-		System.out.println(doc);
+		// ClinicalDocument doc=new ClinicalDocument();
+		// doc.setId(patientID,"1.1.1.1.1");
+		// doc.setTitle("Patient Health Record");
+		// doc.setEffectiveTime(getEffectiveTime());
+		// System.out.println(doc);
 
-		//Marshalling: Writing Java objects to XMl file
-        try {
-            JAXBXMLHandler.marshal(doc, new File(fileName));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
+		// //Marshalling: Writing Java objects to XMl file
+  //       try {
+  //           JAXBXMLHandler.marshal(doc, new File(fileName));
+  //       } catch (IOException e) {
+  //           e.printStackTrace();
+  //       } catch (JAXBException e) {
+  //           e.printStackTrace();
+  //       }
 
 		// try{
 		 //    PrintWriter writer = new PrintWriter(fileName, "UTF-8");

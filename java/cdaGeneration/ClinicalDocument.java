@@ -1,7 +1,12 @@
+package cdaGeneration;
+ 
+import javax.xml.bind.annotation.XmlNsForm;
+import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.*;
+
  
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(namespace="urn:hl7-org:v3", name="ClinicalDocument")
+@XmlRootElement(name="ClinicalDocument",namespace="urn:something")
 
 public class ClinicalDocument  {
     private Id id;

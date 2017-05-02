@@ -1,3 +1,5 @@
+package cdaGeneration;
+
 import javax.xml.bind.annotation.*;
  
 @XmlAccessorType(XmlAccessType.FIELD)

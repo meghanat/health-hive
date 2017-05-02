@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" templateId="1.1.1.1.1.1.0">
+      <!-- 
+********************************************************
+  CDA Header
+********************************************************
+-->
+
+  <id extension="1" root="1.1.1.1.1.1.1" />
+  <title>Patient Health Record</title>
+  <effectiveTime value="20170408" />
+  <custodian>
+    <assignedCustodian>
+      <representedCustodianOrganization>
+        <id extension="1" root="1.1.1.1.1.1.2" />
+        <name>Institute of Applied Dermatology</name>
+      </representedCustodianOrganization>
+    </assignedCustodian>
+  </custodian>
+  <recordTarget>
+    <patientRole>
+      <id extension="3" root="2.16.840.1.113883.3.933" />
+    </patientRole>
+  </recordTarget>
+    <!-- 
+********************************************************
+  CDA Body
+********************************************************
+-->
+  <component>
+    <section>
+      <code code="1" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" />
+      <title>Ayurvedic Consultation</title>
+      <entry>
+        <Observation>
+          <code code="A-134" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Prakruthi" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="CD" code="A-134-4" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Kaphaja" />
+        </Observation>
+      </entry>
+     <entry>
+        <Observation>
+          <code code="A-135" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Sthaniya Vikruthi" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="CD" code="A-134-10" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Kaphavataja" />
+        </Observation>
+      </entry>
+      <entry>
+        <Observation>
+          <code code="A-203" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Phanta Skincare" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="CD" code="A-203-3" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Yastimadhu" />
+        </Observation>
+      </entry>
+      <entry>
+        <Observation>
+          <code code="A-204" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Phanta Quantity Used" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="PQ" value="90" unit="ml"/>
+        </Observation>
+      </entry>
+      <entry>
+        <Observation>
+          <code code="A-215" codeSystem="b741e2cc-1516-466a-b8ae-7e4f5b822202" codeSystemName="Ayurveda" displayName="Ekanga Swedana" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="ST">Not done</value>
+        </Observation>
+      </entry>
+    <section/>
+  <component/>
+  <component>
+    <section>
+      <code code="61129-3" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" />
+      <title>Demographic Information</title>
+      <entry>
+        <Observation>
+          <code code="63503-7" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" displayName="Marital status" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="CD" code="M" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" displayName="Married" />
+        </Observation>
+      </entry>
+     <entry>
+        <Observation>
+          <code code="46468-5" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" displayName="Current living arrangement" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="CD" code="LA6255-9" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" displayName="Lives alone" />
+        </Observation>
+      </entry>
+      <entry>
+        <Observation>
+          <code code="63511-0" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" displayName="Current employment status" />
+          <effectiveTime nullFlavor="UNK" />
+          <value xsi:type="CD" code="LA17956-6" codeSystem="2.16.840.1.113883.5.2" codeSystemName="LOINC" displayName="Unemployed" />
+        </Observation>
+      </entry>
+      <entry>
+        <Observation>
+          <code nullFlavor="UNC">
+            <originalText>Ration Card Type</originalText>
+          </code>
+          <effectiveTime nullFlavor="UNK" />
+          <value nullFlavor="UNK"/>
+        </Observation>
+      </entry>
+    <section/>
+  <component/>
+<ClinicalDocument/>

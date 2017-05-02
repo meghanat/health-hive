@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xsd:schema version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:hl7-org:v3" xmlns:voc="urn:hl7-org:v3/voc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+
+  <xsd:element name="ClinicalDocument">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="id">
+          <xsd:complexType>
+              <xsd:attribute name = 'extension' type = 'xsd:string'/>
+              <xsd:attribute name = 'root' type = 'xsd:string'/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="title" type="xsd:string"/>
+        <xsd:element name="effectiveTime">
+          <xsd:complexType>
+            <xsd:attribute name="value"  type='xsd:string'/>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="custodian">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="assignedCustodian">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="representedCustodianOrganization">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="id">
+                            <xsd:complexType>
+                              <xsd:attribute name = 'extension' type = 'xsd:string'/>
+                              <xsd:attribute name = 'root' type = 'xsd:string'/>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name="recordTarget">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="patientRole">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="id">
+                      <xsd:complexType>
+                          <xsd:attribute name = 'extension' type = 'xsd:string'/>
+                          <xsd:attribute name = 'root' type = 'xsd:string'/>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        <xsd:element name = "component" minOccurs = '0' maxOccurs = 'unbounded' >
+          <xsd:complexType>
+            <xsd:sequence>            
+              <xsd:element name="section">
+                <xsd:complexType>
+                  <xsd:sequence>      
+                    <xsd:element name="code">
+                      <xsd:complexType>
+                        <xsd:attribute name="code" type="xsd:string" use="optional"/>
+                        <xsd:attribute name="codeSystem" type="xsd:string" use="optional"/>
+                        <xsd:attribute name="codeSystemName" type="xsd:string" use="optional"/>
+                        <xsd:attribute name="displayName" type="xsd:string" use="optional"/>
+                        <xsd:attribute name="nullFlavour" default="UNK" type="xsd:string" use="optional"/>
+                      </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="title" type="xsd:string"/>
+                    <xsd:element name="entry">
+                      <xsd:complexType>
+                        <xsd:sequence>
+                          <xsd:element name="Observation">
+                            <xsd:complexType>
+                              <xsd:sequence>      
+                                <xsd:element name="code">
+                                  <xsd:complexType>
+                                    <xsd:sequence>
+                                      <xsd:element name="originalText" type="xsd:string"/>
+                                    </xsd:sequence>
+                                    <xsd:attribute name="code" type="xsd:string" use="optional"/>
+                                    <xsd:attribute name="codeSystem" type="xsd:string" use="optional"/>
+                                    <xsd:attribute name="codeSystemName" type="xsd:string" use="optional"/>
+                                    <xsd:attribute name="displayName" type="xsd:string" use="optional"/>
+                                      
+                                  </xsd:complexType>
+                                </xsd:element>
+                                <xsd:element name="effectiveTime">
+                                  <xsd:complexType>
+                                    <xsd:attribute name = 'value' type = 'xsd:string'  use="optional" default="OBS"/>
+                                    <xsd:attribute name="nullFlavour" type="xsd:string" use="optional"/>
+                                  </xsd:complexType>
+                                </xsd:element>  
+                                <xsd:element name="value">
+                                  <xsd:complexType>
+                                    <xsd:attribute name="codeSystem" type="xsd:string" use="optional"/>
+                                    <xsd:attribute name="type" type="xsd:string" use="optional"/>
+                                    <xsd:attribute name="code" type="xsd:string" use="optional"/>
+                                    <xsd:attribute name="displayName" type="xsd:string" use="optional"/>
+                                  </xsd:complexType>
+                                </xsd:element>                           
+                              </xsd:sequence>
+                            </xsd:complexType>
+                          </xsd:element>
+                        </xsd:sequence>
+                      </xsd:complexType>
+                    </xsd:element>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
+  
