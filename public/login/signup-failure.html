@@ -8,12 +8,12 @@
 			<div class="row">
 				<div class="col-md-4 col-md-offset-4">
 					<h2 class="text-center">
-					Sign in</h1>
+					Sign Up</h1>
 					<hr/>
 					<form  
-						action='/login' 
-						method='post' 
+						action='/signup' 
 						encType="multipart/form-data"
+						method='post' 
 						style="margin-top:2em"
 						>
 						<div class="form-group">
@@ -25,14 +25,12 @@
 							<input id="pass" type="password" class="form-control" data-type="password" name='password'>
 						</div>
 						<div class="form-group">
-							<input type="submit" value="Sign In"/>
+							<input type="submit" value="Sign Up"/>
 						</div>
 						<hr/>
-						<div>
-							<a href="#forgot">Forgot Password?</a>
-							<a href="/signup" style="float:right"> Sign Up</a>
-						</div>
 					</form>
+					<hr/>
+					<div class="alert alert-danger" role="alert">Username already exists</div>
 				</div>
 			</div>
 		</div>
