@@ -23,10 +23,12 @@ public class HiveClient {
  	private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
 	//create hive query for create table
-	private static String getCreateQuery(String tableName,String CSVHeader){
+	private static String getCreateQuery(String tableName,String csvHeader){
 
 		String query="create table "+tableName +"(";
-		String columns[]=CSVHeader.split(",");
+			csvHeader = csvHeader.replace("\"", "");
+			csvHeader = csvHeader.replace("\'", "");
+		String columns[]=csvHeader.split(",");
 		for(int i=0;i<columns.length-1;i++){
 			query+=columns[i]+" string,";
 		}
@@ -97,8 +99,6 @@ public class HiveClient {
 			System.out.println("\ntable drop: "+dropTable);
 			stmt.execute(dropTable);
 			System.out.println("Table dropped");
-
-			
 
 			
 			

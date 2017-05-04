@@ -5,20 +5,27 @@
   </head>
   <body>
     <div class="container">
-      <div class="col-md-8">
+      <div class="row">
+        <a href="/home" style="float:left;margin-top:1em" class="btn btn-default"><span class="glyphicon glyphicon-home"/> Home </a>
+
+        <a href="/signout" style="float:right;margin-top:1em" class="btn btn-default"><span class="glyphicon glyphicon-log-out"/> Logout</a>
+      </div>
+      <div class="col-md-4 col-md-offset-4">
       <form ref='uploadForm' 
         id='uploadForm' 
         action='/cda' 
         method='post' 
         encType="multipart/form-data"
         style="margin-top:2em">
-
+        <h2>Generate CDA Document</h2>
+        <hr/>
         <div class="form-group">
         <label>Enter Patient ID</label>
-          <input type="text" name="patient_id" />
+          <input type="text" name="patient_id" class="form-control" />
         </label>
       </div>
-          <input type='submit' value='Generate CDA!' class="btn btn-default" />
+      <hr/>
+          <input type='submit' value='Generate CDA!' class="btn btn-primary" />
       </form>
     </div>
     

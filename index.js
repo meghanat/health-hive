@@ -121,7 +121,6 @@ passport.use('login', new LocalStrategy({
   },
   function(req, username, password, done) { 
 
-    console.log("heeeer")
     // check in mongo if a user with username exists or not
     User.findOne({ 'username' :  username }, 
       function(err, user) {
@@ -184,7 +183,10 @@ app.post('/signup', passport.authenticate('signup', {
     failureRedirect: '/signup-failure',
   }));
 
-
+app.get('/signout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
 
 app.get('/home',isAuthenticated, function(req, res) {
     res.sendfile(path.join(__dirname, 'public', 'home', 'index.html'));
@@ -326,19 +328,6 @@ app.post('/data', isAuthenticated ,function(req, res) {
     }
 
 });
-
-// var child;
-
-// child = exec("ls -la",
-//  	 function (error, stdout, stderr) {
-//      console.log('stdout: ' + stdout);
-//      console.log('stderr: ' + stderr);
-//      if (error !== null) {
-//          console.log('exec error: ' + error);
-//      }
-//   });
-
-
 
 
 app.listen(3000);
