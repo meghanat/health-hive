@@ -312,7 +312,7 @@ app.post('/data', isAuthenticated ,function(req, res) {
 				    		console.log(stderror)
 				    	}
 				    	console.log(stdout)
-				        res.send("Ok")
+				        res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'success.html'));
 				    })
 
                 }
