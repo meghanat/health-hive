@@ -276,8 +276,8 @@ app.post('/data', isAuthenticated ,function(req, res) {
     unique_folder = "data/" + uuidV1()
     folder_path="java/"+unique_folder;
     no_files = req.files.sampleFile.length
-    console.log("no files:", no_files)
-
+    console.log("####no files:", no_files)
+    console.log("####files:", req.files.sampleFile)
     metadata_file=req.files.metadataFile
 
     if (!fs.existsSync(unique_folder)) {
@@ -289,37 +289,69 @@ app.post('/data', isAuthenticated ,function(req, res) {
         		console.log("could not move metadata file")
         	}
         })
-        for (var file in req.files.sampleFile) {
+        if(no_files){
+          for (var file in req.files.sampleFile) {
 
-            file = req.files.sampleFile[file]
+              file = req.files.sampleFile[file]
 
-            filename = file.name
+              filename = file.name
 
-            filename_path = folder_path +"/"+ filename;
-            filenames.push(filename)
+              filename_path = folder_path +"/"+ filename;
+              filenames.push(filename)
 
-            file.mv(filename_path, function(err) {
-                if (err)
-                    return res.status(500).send(err);
-                count += 1;
-                if (count == no_files) {
-                    console.log("Files moved")
-                    command="java HiveClient "+ unique_folder;
-                    exec(command, {
-				        cwd: "java"
-				    }, function(err, stdout, stderror) {
-				    	if(err){
-				    		console.log(stderror)
-				    	}
-				    	console.log(stdout)
-				        res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'success.html'));
-				    })
+              file.mv(filename_path, function(err) {
+                  if (err)
+                      return res.status(500).send(err);
+                  count += 1;
+                  if (count == no_files) {
+                      console.log("Files moved")
+                      command="java HiveClient "+ unique_folder;
+                      exec(command, {
+  				        cwd: "java"
+  				    }, function(err, stdout, stderror) {
+  				    	if(err){
+  				    		console.log(stderror)
+  				    	}
+  				    	console.log(stdout)
+  				        res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'success.html'));
+  				    })
 
+                  }
+              });
+
+          }
+        }
+        else if(req.files.sampleFile){
+              console.log("##here")
+              file = req.files.sampleFile
+
+              filename = file.name
+
+              filename_path = folder_path +"/"+ filename;
+              filenames.push(filename)
+
+              file.mv(filename_path, function(err) {
+                  if (err)
+                      return res.status(500).send(err);
+                  console.log("File moved")
+                  command="java HiveClient "+ unique_folder;
+                  exec(command, {
+                  cwd: "java"
+              }, function(err, stdout, stderror) {
+                if(err){
+                  console.log(stderror)
                 }
-            });
+                console.log(stdout)
+                  res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'success.html'));
+              })
+
+                  }
+              );
+
+
+
 
         }
-
 
     }
     else {
