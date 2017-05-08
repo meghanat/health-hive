@@ -390,7 +390,10 @@ public class ClinicalDocument {
         }
         return this.component;
     }
-
+    public void setComponent(List<ClinicalDocument.Component> components) {
+        
+        this.component=components;
+    }
 
     /**
      * <p>Java class for anonymous complex type.
@@ -1136,7 +1139,7 @@ public class ClinicalDocument {
                     })
                     public static class Code {
 
-                        @XmlElement(required = true)
+                        
                         protected String originalText;
                         @XmlAttribute(name = "code")
                         protected String code;
@@ -1373,9 +1376,12 @@ public class ClinicalDocument {
                      * 
                      */
                     @XmlAccessorType(XmlAccessType.FIELD)
-                    @XmlType(name = "")
+                    @XmlType(name = "", propOrder = {
+                        "originalText"
+                    })
                     public static class Value {
 
+                        protected String originalText;
                         @XmlAttribute(name = "codeSystem")
                         protected String codeSystem;
                         @XmlAttribute(name = "type")
@@ -1384,6 +1390,31 @@ public class ClinicalDocument {
                         protected String code;
                         @XmlAttribute(name = "displayName")
                         protected String displayName;
+
+                         /**
+                         * Gets the value of the originalText property.
+                         * 
+                         * @return
+                         *     possible object is
+                         *     {@link String }
+                         *     
+                         */
+                        public String getOriginalText() {
+                            return originalText;
+                        }
+
+                        /**
+                         * Sets the value of the originalText property.
+                         * 
+                         * @param value
+                         *     allowed object is
+                         *     {@link String }
+                         *     
+                         */
+                        public void setOriginalText(String value) {
+                            this.originalText = value;
+                        }
+
 
                         /**
                          * Gets the value of the codeSystem property.

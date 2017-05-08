@@ -93,16 +93,19 @@ public class CDAGenerator {
 
 	}
   
-  // public static ClinicalDocument.Component createComponent(JSONObject table,String patientID,Connection con){
-  public static void createComponent(JSONObject table,String patientID,Connection con){
+  public static ClinicalDocument.Component createComponent(JSONObject table,String patientID,Connection con){
+  // public static void createComponent(JSONObject table,String patientID,Connection con){
 
   	try
   	{
 	  	String tableName=table.getString("name");
 	  	ClinicalDocument.Component component= new ClinicalDocument.Component();
 	  	ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
+	  	component.setSection(section);
 	  	section.setTitle(tableName);
-		  	String patientIDColumn=null;
+		String patientIDColumn=null;
+		// String effectiveTimeColumn=null;
+		// String effectiveTimeValue=null;
 	  	//get patient id column
 	  	JSONObject columns=table.getJSONObject("columns");
 
@@ -113,10 +116,13 @@ public class CDAGenerator {
 	    	JSONObject column=columns.getJSONObject(key);
 	    	if(column.getBoolean("is_patient_id")){
 	    		patientIDColumn=key;
-	    		break;
 	    	}
+	    	// if(column.getBoolean("is_effective_time")){
+	    	// 	effectiveTimeColumn=key;
+	    	// }
 		}
 		String query="select * from "+tableName+" where "+patientIDColumn+"="+patientID;
+		// ClinicalDocument.Component.Section.Entry.Observation.EffectiveTime et=new ClinicalDocument.Component.Section.Entry.Observation.EffectiveTime();
 		System.out.println(query);
 		try{
 			try (PreparedStatement selectStmt = con.prepareStatement(
@@ -128,12 +134,48 @@ public class CDAGenerator {
         else {
           while (rs.next()) {
             for (int i = 1; i < rs.getMetaData().getColumnCount() + 1; i++) {
-              System.out.print(" " + rs.getMetaData().getColumnName(i) + "=" + rs.getObject(i));
+            	String columnName=rs.getMetaData().getColumnName(i).split("\\.")[1];
+            	String value=rs.getObject(i).toString();
+            	JSONObject column=columns.getJSONObject(columnName);
+            	ClinicalDocument.Component.Section.Entry entry=new ClinicalDocument.Component.Section.Entry();
+            	ClinicalDocument.Component.Section.Entry.Observation obs= new ClinicalDocument.Component.Section.Entry.Observation();
+            	
+            	
+            	if(column.getBoolean("is_encoded")){
+            		ClinicalDocument.Component.Section.Entry.Observation.Code code=new ClinicalDocument.Component.Section.Entry.Observation.Code();
+            		code.setCode(column.getString("columnNameCode"));
+            		code.setDisplayName(columnName);
+            		code.setCodeSystem(column.getString("columnNameCodeSystem"));
+            		code.setCodeSystemName("");
+            		obs.setCode(code);
+
+            		ClinicalDocument.Component.Section.Entry.Observation.Value val=new ClinicalDocument.Component.Section.Entry.Observation.Value();
+            		val.setCode(value);
+            		val.setCodeSystem(column.getString("columnValuesCodeSystem"));
+            		val.setDisplayName("");
+            		val.setType("CD");
+            		obs.setValue(val);
+
+            	}
+            	else{
+
+            		ClinicalDocument.Component.Section.Entry.Observation.Code code=new ClinicalDocument.Component.Section.Entry.Observation.Code();
+
+            		code.setOriginalText(columnName);
+            		obs.setCode(code);
+
+            		ClinicalDocument.Component.Section.Entry.Observation.Value val=new ClinicalDocument.Component.Section.Entry.Observation.Value();
+            		val.setOriginalText(value);
+					obs.setValue(val);
+
+            	}
+            	section.setEntry(entry);
+            	entry.setObservation(obs);
             }
-            System.out.println("");
           }
         }
       }
+      return component;
     }
     catch (SQLException e) {
       throw new RuntimeException(e);
@@ -142,7 +184,8 @@ public class CDAGenerator {
 	}
 	catch(Exception e){
 		e.printStackTrace();
-	}			
+	}	
+	return null;		
 
  }
   
@@ -177,6 +220,7 @@ public class CDAGenerator {
 
 		//set assignedcustodian
 		ClinicalDocument.Custodian c=fact.createClinicalDocumentCustodian();
+		doc.setCustodian(c);
 		ClinicalDocument.Custodian.AssignedCustodian.RepresentedCustodianOrganization rco=fact.createClinicalDocumentCustodianAssignedCustodianRepresentedCustodianOrganization();
 		ClinicalDocument.Custodian.AssignedCustodian.RepresentedCustodianOrganization.Id rco_id=fact.createClinicalDocumentCustodianAssignedCustodianRepresentedCustodianOrganizationId();
 		rco_id.setExtension(databaseName);
@@ -193,6 +237,9 @@ public class CDAGenerator {
 		ClinicalDocument.RecordTarget.PatientRole.Id pr_id=fact.createClinicalDocumentRecordTargetPatientRoleId();
 		pr_id.setRoot(databaseName);
 		pr_id.setExtension(patientID);
+		pr.setId(pr_id);
+		rt.setPatientRole(pr);
+		doc.setRecordTarget(rt);
 
 
 		String connectionString="jdbc:hive2://localhost:10000/"+databaseName;
@@ -225,13 +272,19 @@ public class CDAGenerator {
 				{
 				    
 				    JSONObject table = tables.getJSONObject(i);
-				    // componentList.add(createComponent(table,patientID));
-				    createComponent(table,patientID,con);
-				    
-				 	   
+				    componentList.add(createComponent(table,patientID,con));
+
 				}
+				doc.setComponent(componentList);
 
 		   }
+
+
+			//Marshalling: Writing Java objects to XMl file
+	        
+	        JAXBXMLHandler.marshal(doc, new File(fileName));
+
+
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -261,15 +314,6 @@ public class CDAGenerator {
 		// doc.setTitle("Patient Health Record");
 		// doc.setEffectiveTime(getEffectiveTime());
 		// System.out.println(doc);
-
-		// //Marshalling: Writing Java objects to XMl file
-  //       try {
-  //           JAXBXMLHandler.marshal(doc, new File(fileName));
-  //       } catch (IOException e) {
-  //           e.printStackTrace();
-  //       } catch (JAXBException e) {
-  //           e.printStackTrace();
-  //       }
 
 		// try{
 		 //    PrintWriter writer = new PrintWriter(fileName, "UTF-8");

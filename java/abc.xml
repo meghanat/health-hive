@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<ns2:ClinicalDocument xmlns:ns2="urn:something">
-    <id extension="1" root="1.1.1.1.1"/>
+<ClinicalDocument>
+    <id extension="0" root="0"/>
     <title>Patient Health Record</title>
-    <effectiveTime value="20170428"/>
-</ns2:ClinicalDocument>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id extension="iad" root="0"/>
+                <name>iad</name>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <recordTarget>
+        <patientRole>
+            <id extension="3" root="iad"/>
+        </patientRole>
+    </recordTarget>
+    <component>
+        <section>
+            <title>activities_ayur_consultant</title>
+            <entry>
+                <Observation>
+                    <code code="" codeSystem="" codeSystemName="" displayName="sthaniya_vikruthi"/>
+                    <value codeSystem="" type="CD" code="10" displayName=""/>
+                </Observation>
+            </entry>
+        </section>
+    </component>
+    <component>
+        <section>
+            <title>admission_demographic</title>
+            <entry>
+                <Observation>
+                    <code code="" codeSystem="" codeSystemName="" displayName="livingwith"/>
+                    <value codeSystem="" type="CD" code="1" displayName=""/>
+                </Observation>
+            </entry>
+        </section>
+    </component>
+</ClinicalDocument>
