@@ -33,19 +33,6 @@ public class CDAGenerator {
 
  	private static String driverName = "org.apache.hive.jdbc.HiveDriver";
 
-	//create hive query for create table
-	private static String getCreateQuery(String tableName,String CSVHeader){
-
-		String query="create table "+tableName +"(";
-		String columns[]=CSVHeader.split(",");
-		for(int i=0;i<columns.length-1;i++){
-			query+=columns[i]+" string,";
-		}
-		query+=columns[columns.length-1]+" string)";
-		query+=" row format delimited fields terminated by ',' stored as textfile";
-		// System.out.println(query);
-		return query;
-	}
 
 	//delete temp directory
 	private static void deleteDir(File file) {
@@ -96,7 +83,7 @@ public static void spitOutAllTableRows(String tableName,String patientID, Connec
     try {
       System.out.println("current " + tableName + " is:");
       try (PreparedStatement selectStmt = conn.prepareStatement(
-              "SELECT * from " + tableName+" where patient_id="+patientID, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+              "SELECT * from " + tableName+" where id="+patientID, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
            ResultSet rs = selectStmt.executeQuery()) {
         if (!rs.isBeforeFirst()) {
           System.out.println("no rows found");

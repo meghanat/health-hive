@@ -151,7 +151,7 @@ passport.use('login', new LocalStrategy({
 
 
 
-// respond with "hello world" when a GET request is made to the homepage
+
 app.get('/', function(req, res) {
     res.sendfile(path.join(__dirname, 'public', 'login', 'index.html'));
 })
@@ -160,7 +160,7 @@ app.post('/login', passport.authenticate('login', {
     successRedirect: '/home',
     failureRedirect: '/login-failure',
   }));
-
+//show alert
 app.get("/login-failure",function(req,res){
 
     res.sendfile(path.join(__dirname, 'public', 'login', 'login-failure.html'));
@@ -172,7 +172,7 @@ app.get("/signup",function(req,res){
     res.sendfile(path.join(__dirname, 'public', 'login', 'signup.html'));
 
 })
-
+//show alert
 app.get("/signup-failure",function(req,res){
 
     res.sendfile(path.join(__dirname, 'public', 'login', 'signup-failure.html'));
@@ -187,21 +187,23 @@ app.get('/signout', function(req, res) {
   req.logout();
   res.redirect('/');
 });
-
+//main page
 app.get('/home',isAuthenticated, function(req, res) {
     res.sendfile(path.join(__dirname, 'public', 'home', 'index.html'));
 })
+
 app.get("/codesystem",isAuthenticated, function(req, res) {
     res.sendfile(path.join(__dirname, 'public', 'codesystem', 'fileupload.html'));
 
 })
+
 app.post('/codesystem',isAuthenticated, function(req, res) {
     if (!req.files)
         return res.status(400).send('No files were uploaded.');
-    sampleFile = req.files.sampleFile;
+    sampleFile = req.files.sampleFile;//data files
     codeSystem = JSON.parse(req.files.sampleFile.data)
     codeSystemOID = uuidV1()
-    codeSystem["codeSystem"] = codeSystemOID
+    codeSystem["codeSystem"] = codeSystemOID//unique OID for ad-hoc codesystem
 
     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
         if (err) throw err;
@@ -211,35 +213,35 @@ app.post('/codesystem',isAuthenticated, function(req, res) {
         db.collection('codesystem').insert(codeSystem, function(err, records) {
             if (err) throw err;
             console.log("Record added");
-            res.send('File uploaded! <br/><br/>Code System Code : ' + codeSystemOID);
+            res.sendFile(path.join(__dirname, 'public', 'codesystem', 'success.html'));
         });
     });
 
 
 });
 
-app.post('/metadata', isAuthenticated,function(req, res) {
-    if (!req.files)
-        return res.status(400).send('No files were uploaded.');
-    sampleFile = req.files.sampleFile;
-    codeSystem = JSON.parse(req.files.sampleFile.data)
-    codeSystemOID = uuidV1()
-    codeSystem["codeSystem"] = codeSystemOID
+// app.post('/metadata', isAuthenticated,function(req, res) {
+//     if (!req.files)
+//         return res.status(400).send('No files were uploaded.');
+//     sampleFile = req.files.sampleFile;
+//     codeSystem = JSON.parse(req.files.sampleFile.data)
+//     codeSystemOID = uuidV1()
+//     codeSystem["codeSystem"] = codeSystemOID
 
-    MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
-        if (err) throw err;
-        console.log("Connected to Database");
+//     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+//         if (err) throw err;
+//         console.log("Connected to Database");
 
-        //insert record
-        db.collection('metadata').insert(codeSystem, function(err, records) {
-            if (err) throw err;
-            console.log("Record added");
-            res.send('File uploaded! <br/><br/>Code System Code : ' + codeSystemOID);
-        });
-    });
+//         //insert record
+//         db.collection('metadata').insert(codeSystem, function(err, records) {
+//             if (err) throw err;
+//             console.log("Record added");
+//             res.send('File uploaded! <br/><br/>Code System Code : ' + codeSystemOID);
+//         });
+//     });
 
 
-});
+// });
 
 app.get("/data",isAuthenticated, function(req, res) {
     res.sendfile(path.join(__dirname, 'public', 'uploadCSV', 'csvfileupload.html'));
@@ -267,7 +269,7 @@ app.post("/cda", isAuthenticated,function(req,res){
 })
 
 
-
+//upload data
 app.post('/data', isAuthenticated ,function(req, res) {
     if (!req.files)
         return res.status(400).send('No files were uploaded.');
@@ -279,7 +281,20 @@ app.post('/data', isAuthenticated ,function(req, res) {
     console.log("####no files:", no_files)
     console.log("####files:", req.files.sampleFile)
     metadata_file=req.files.metadataFile
+    metadata = JSON.parse(metadata_file.data)
+    //upload metadata to mongo
+     MongoClient.connect('mongodb://127.0.0.1:27017/test', function(err, db) {
+        if (err) throw err;
+        console.log("Connected to Database");
 
+        //insert record
+        db.collection('metadata').insert(metadata, function(err, records) {
+            if (err) throw err;
+            console.log("Record added to metadatastore");
+        });
+    });
+
+    //create temp folder to move csv files
     if (!fs.existsSync(unique_folder)) {
         fs.mkdirSync(folder_path);
         metadata_file_path=folder_path+"/metadata.json"
@@ -289,6 +304,7 @@ app.post('/data', isAuthenticated ,function(req, res) {
         		console.log("could not move metadata file")
         	}
         })
+        //if multiple CSV files are uploaded
         if(no_files){
           for (var file in req.files.sampleFile) {
 
@@ -303,7 +319,7 @@ app.post('/data', isAuthenticated ,function(req, res) {
                   if (err)
                       return res.status(500).send(err);
                   count += 1;
-                  if (count == no_files) {
+                  if (count == no_files) {//after all files are moved, exec java process
                       console.log("Files moved")
                       command="java HiveClient "+ unique_folder;
                       exec(command, {
@@ -321,6 +337,7 @@ app.post('/data', isAuthenticated ,function(req, res) {
 
           }
         }
+        //if single file is uploaded
         else if(req.files.sampleFile){
               console.log("##here")
               file = req.files.sampleFile
