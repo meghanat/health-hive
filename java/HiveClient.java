@@ -33,7 +33,7 @@ public class HiveClient {
 			query+=columns[i]+" string,";
 		}
 		query+=columns[columns.length-1]+" string)";
-		query+=" row format delimited fields terminated by ',' stored as textfile";
+		query+=" row FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde' WITH SERDEPROPERTIES ('separatorChar' = ',') stored as textfile";
 		// System.out.println(query);
 		return query;
 	}

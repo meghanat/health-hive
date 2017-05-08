@@ -25,6 +25,20 @@ import javax.xml.bind.JAXBException;
 
 import cdaTemplate.*;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoException;
+import com.mongodb.WriteConcern;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.mongodb.DBCursor;
+
+import com.mongodb.ServerAddress;
+import java.util.Arrays;
+
+
 
 
 public class CDAGenerator {
@@ -78,12 +92,35 @@ public class CDAGenerator {
       	}
 
 	}
+  
+  // public static ClinicalDocument.Component createComponent(JSONObject table,String patientID,Connection con){
+  public static void createComponent(JSONObject table,String patientID,Connection con){
 
-public static void spitOutAllTableRows(String tableName,String patientID, Connection conn) {
-    try {
-      System.out.println("current " + tableName + " is:");
-      try (PreparedStatement selectStmt = conn.prepareStatement(
-              "SELECT * from " + tableName+" where id="+patientID, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+  	try
+  	{
+	  	String tableName=table.getString("name");
+	  	ClinicalDocument.Component component= new ClinicalDocument.Component();
+	  	ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
+	  	section.setTitle(tableName);
+		  	String patientIDColumn=null;
+	  	//get patient id column
+	  	JSONObject columns=table.getJSONObject("columns");
+
+		Iterator<?> keys = columns.keys();
+
+		while( keys.hasNext() ) {
+	    	String key = (String)keys.next();
+	    	JSONObject column=columns.getJSONObject(key);
+	    	if(column.getBoolean("is_patient_id")){
+	    		patientIDColumn=key;
+	    		break;
+	    	}
+		}
+		String query="select * from "+tableName+" where "+patientIDColumn+"="+patientID;
+		System.out.println(query);
+		try{
+			try (PreparedStatement selectStmt = con.prepareStatement(
+             query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
            ResultSet rs = selectStmt.executeQuery()) {
         if (!rs.isBeforeFirst()) {
           System.out.println("no rows found");
@@ -101,7 +138,13 @@ public static void spitOutAllTableRows(String tableName,String patientID, Connec
     catch (SQLException e) {
       throw new RuntimeException(e);
     }
-  }
+		
+	}
+	catch(Exception e){
+		e.printStackTrace();
+	}			
+
+ }
   
   public static void main(String[] args) throws SQLException {
 
@@ -112,18 +155,106 @@ public static void spitOutAllTableRows(String tableName,String patientID, Connec
 		String fileName=args[2];
 		System.out.println(args[0]+args[1]+args[2]);
 		String driverName = "org.apache.hive.jdbc.HiveDriver";
-		
+
+		//create object of object Factory
+		ObjectFactory fact=new ObjectFactory();
+
+		//create new document
+		ClinicalDocument doc=fact.createClinicalDocument();
+
+		//document id
+		ClinicalDocument.Id id=fact.createClinicalDocumentId();
+		id.setRoot("0");
+		id.setExtension("0");
+		doc.setId(id);
+
+		//set title
+		doc.setTitle("Patient Health Record");
+
+		//set effective time of CDA generation
+		ClinicalDocument.EffectiveTime et=fact.createClinicalDocumentEffectiveTime();
+		et.setValue(getEffectiveTime());
+
+		//set assignedcustodian
+		ClinicalDocument.Custodian c=fact.createClinicalDocumentCustodian();
+		ClinicalDocument.Custodian.AssignedCustodian.RepresentedCustodianOrganization rco=fact.createClinicalDocumentCustodianAssignedCustodianRepresentedCustodianOrganization();
+		ClinicalDocument.Custodian.AssignedCustodian.RepresentedCustodianOrganization.Id rco_id=fact.createClinicalDocumentCustodianAssignedCustodianRepresentedCustodianOrganizationId();
+		rco_id.setExtension(databaseName);
+		rco_id.setRoot("0");
+		rco.setId(rco_id);
+		rco.setName(databaseName);
+		ClinicalDocument.Custodian.AssignedCustodian ac=fact.createClinicalDocumentCustodianAssignedCustodian();
+		ac.setRepresentedCustodianOrganization(rco);
+		c.setAssignedCustodian(ac);
+
+		//record Target
+		ClinicalDocument.RecordTarget rt=fact.createClinicalDocumentRecordTarget();
+		ClinicalDocument.RecordTarget.PatientRole pr=fact.createClinicalDocumentRecordTargetPatientRole();
+		ClinicalDocument.RecordTarget.PatientRole.Id pr_id=fact.createClinicalDocumentRecordTargetPatientRoleId();
+		pr_id.setRoot(databaseName);
+		pr_id.setExtension(patientID);
+
+
 		String connectionString="jdbc:hive2://localhost:10000/"+databaseName;
 		Connection con = DriverManager.getConnection(connectionString, "root", "hadoop");
-		Statement stmt = con.createStatement();
-		String showTables="show tables";
+
+
+	
+		//get metadata for user
+		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+			
+         // Now connect to your databases
+         DB db = mongoClient.getDB( "test" );
+         System.out.println("Connect to database successfully");
+         DBCollection coll = db.getCollection("metadata");
+         System.out.println("Collection metadata selected successfully");
+
+         BasicDBObject query=new BasicDBObject("organisation",databaseName);
+         
+         DBCursor cursor = coll.find(query);
+         List<ClinicalDocument.Component> componentList=new ArrayList<ClinicalDocument.Component>();	
+         
+		 try {
+		   if(cursor.hasNext()) {
+		   		String metadata=cursor.next().toString();
+		   		JSONObject obj = new JSONObject(metadata);
+				
+				//get all tables in the database
+				JSONArray tables=obj.getJSONArray("tables");
+				for (int i = 0; i < tables.length(); i++)
+				{
+				    
+				    JSONObject table = tables.getJSONObject(i);
+				    // componentList.add(createComponent(table,patientID));
+				    createComponent(table,patientID,con);
+				    
+				 	   
+				}
+
+		   }
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		 finally {
+		   cursor.close();
+		}
+
 		
-		ResultSet res =stmt.executeQuery(showTables);
-    	if (res.next()) {
-    		String tableName=res.getString(1);
-    		System.out.println(tableName);
-        	spitOutAllTableRows(tableName,patientID,con);
-      	}
+		// String connectionString="jdbc:hive2://localhost:10000/"+databaseName;
+		// Connection con = DriverManager.getConnection(connectionString, "root", "hadoop");
+		// Statement stmt = con.createStatement();
+		// String showTables="show tables";
+
+
+
+
+		
+		// ResultSet res =stmt.executeQuery(showTables);
+  //   	if (res.next()) {
+  //   		String tableName=res.getString(1);
+  //   		System.out.println(tableName);
+  //       	spitOutAllTableRows(tableName,patientID,con);
+  //     	}
 			
 		// ClinicalDocument doc=new ClinicalDocument();
 		// doc.setId(patientID,"1.1.1.1.1");
