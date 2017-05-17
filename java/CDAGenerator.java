@@ -101,6 +101,7 @@ public class CDAGenerator {
 	  	String tableName=table.getString("name");
 	  	ClinicalDocument.Component component= new ClinicalDocument.Component();
 	  	ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
+
 	  	component.setSection(section);
 	  	section.setTitle(tableName);
 		String patientIDColumn=null;
@@ -140,7 +141,9 @@ public class CDAGenerator {
             	ClinicalDocument.Component.Section.Entry entry=new ClinicalDocument.Component.Section.Entry();
             	ClinicalDocument.Component.Section.Entry.Observation obs= new ClinicalDocument.Component.Section.Entry.Observation();
             	
-            	
+            	if(column.getBoolean("is_patient_id")){
+            		continue;
+            	}
             	if(column.getBoolean("is_encoded")){
             		ClinicalDocument.Component.Section.Entry.Observation.Code code=new ClinicalDocument.Component.Section.Entry.Observation.Code();
             		code.setCode(column.getString("columnNameCode"));
@@ -169,8 +172,8 @@ public class CDAGenerator {
 					obs.setValue(val);
 
             	}
-            	section.setEntry(entry);
             	entry.setObservation(obs);
+            	section.getEntry().add(entry);
             }
           }
         }
@@ -272,10 +275,9 @@ public class CDAGenerator {
 				{
 				    
 				    JSONObject table = tables.getJSONObject(i);
-				    componentList.add(createComponent(table,patientID,con));
-
+				    doc.getComponent().add(createComponent(table,patientID,con));
 				}
-				doc.setComponent(componentList);
+				
 
 		   }
 
@@ -290,45 +292,7 @@ public class CDAGenerator {
 		}
 		 finally {
 		   cursor.close();
-		}
-
-		
-		// String connectionString="jdbc:hive2://localhost:10000/"+databaseName;
-		// Connection con = DriverManager.getConnection(connectionString, "root", "hadoop");
-		// Statement stmt = con.createStatement();
-		// String showTables="show tables";
-
-
-
-
-		
-		// ResultSet res =stmt.executeQuery(showTables);
-  //   	if (res.next()) {
-  //   		String tableName=res.getString(1);
-  //   		System.out.println(tableName);
-  //       	spitOutAllTableRows(tableName,patientID,con);
-  //     	}
-			
-		// ClinicalDocument doc=new ClinicalDocument();
-		// doc.setId(patientID,"1.1.1.1.1");
-		// doc.setTitle("Patient Health Record");
-		// doc.setEffectiveTime(getEffectiveTime());
-		// System.out.println(doc);
-
-		// try{
-		 //    PrintWriter writer = new PrintWriter(fileName, "UTF-8");
-		 //    writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<ClinicalDocument xmlns=\"urn:hl7-org:v3\" xmlns:voc=\"urn:hl7-org:v3/voc\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" templateId=\"1.1.1.1.1.1\">\n");
-		 //    writer.println("<id extension=\"1\" root=\"1.1.1.1.1.1.1\" />\n<title>Patient Health Record</title>");
-		
-			// System.out.println(effectiveTime);
-			// writer.println("<effectiveTime value=\""+effectiveTime+"\"/>");
-			// writer.println("<custodian>\n<assignedCustodian>\n<representedCustodianOrganization>\n<id extension=\"1\" root=\"1.1.1.1.1.1.2\" />\n<name>Institute of Applied Dermatology</name>\n</representedCustodianOrganization>\n</assignedCustodian>\n</custodian>\n<recordTarget>\n<patientRole>\n<id extension=\""+patientID+"\" root=\"2.16.840.1.113883.3.933\" />\n</patientRole>\n</recordTarget>");
-		 //    writer.close();
-		// } 
-		// catch (IOException e) {
-		// 	e.printStackTrace();
-		// }
-	   
+		}	   
 	}
 
 }

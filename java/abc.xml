@@ -20,6 +20,12 @@
             <title>activities_ayur_consultant</title>
             <entry>
                 <Observation>
+                    <code code="" codeSystem="" codeSystemName="" displayName="prakruthi"/>
+                    <value codeSystem="" type="CD" code="4" displayName=""/>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
                     <code code="" codeSystem="" codeSystemName="" displayName="sthaniya_vikruthi"/>
                     <value codeSystem="" type="CD" code="10" displayName=""/>
                 </Observation>
@@ -29,6 +35,12 @@
     <component>
         <section>
             <title>admission_demographic</title>
+            <entry>
+                <Observation>
+                    <code code="" codeSystem="" codeSystemName="" displayName="maritalstatus"/>
+                    <value codeSystem="" type="CD" code="2" displayName=""/>
+                </Observation>
+            </entry>
             <entry>
                 <Observation>
                     <code code="" codeSystem="" codeSystemName="" displayName="livingwith"/>

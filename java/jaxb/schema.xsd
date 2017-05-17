@@ -75,7 +75,7 @@
                       </xsd:complexType>
                     </xsd:element>
                     <xsd:element name="title" type="xsd:string"/>
-                    <xsd:element name="entry">
+                    <xsd:element name="entry" minOccurs = '0' maxOccurs = 'unbounded' >
                       <xsd:complexType>
                         <xsd:sequence>
                           <xsd:element name="Observation">
@@ -101,6 +101,9 @@
                                 </xsd:element>  
                                 <xsd:element name="value">
                                   <xsd:complexType>
+                                    <xsd:sequence>
+                                      <xsd:element name="originalText" type="xsd:string"/>
+                                    </xsd:sequence>
                                     <xsd:attribute name="codeSystem" type="xsd:string" use="optional"/>
                                     <xsd:attribute name="type" type="xsd:string" use="optional"/>
                                     <xsd:attribute name="code" type="xsd:string" use="optional"/>
