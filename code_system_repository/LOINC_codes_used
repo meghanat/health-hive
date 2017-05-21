@@ -1,0 +1,21 @@
+{
+	"codeSystemName": "LOINC",
+	"codes": {
+		"63503-7": "Marital Status",
+		"LA48-4": "Married",
+		"LA49-2": "Widowed",
+		"LA47-6": "Never married",
+		"LA4288-2": "Separated",
+		"LA33-6": "Yes",
+		"LA32-8": "No",
+		"LA4489-6": "Unknown",
+		"LA15312-4": "Self",
+		"LA15637-4": "Husband or wife",
+		"LA15639-0": "Biological son or daughter",
+		"LA15640-8": "Relative",
+		"LA15647-3": "Father or Mother",
+		"LA15649-9": "Others",
+		"LA18387-3": "Not Satisfied",
+		"LA18534-0": "Satisfied"
+	}
+}

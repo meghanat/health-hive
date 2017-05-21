@@ -23,7 +23,7 @@ import java.time.ZoneId;
 
 import javax.xml.bind.JAXBException;
 
-import cdaTemplate.*;
+import cda.*;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
@@ -102,6 +102,18 @@ public class CDAGenerator {
 	  	ClinicalDocument.Component component= new ClinicalDocument.Component();
 	  	ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
 
+	  	//open mongodb connection for fetching codesystem data
+	  	//get metadata for user
+		MongoClient mongoClient = new MongoClient( "localhost" , 27017 );
+			
+         // Now connect to your databases
+         DB db = mongoClient.getDB( "test" );
+         // System.out.println("Connect to database successfully");
+         DBCollection coll = db.getCollection("codesystem");
+         // System.out.println("Collection codesystem selected successfully");
+
+         
+
 	  	component.setSection(section);
 	  	section.setTitle(tableName);
 		String patientIDColumn=null;
@@ -124,7 +136,7 @@ public class CDAGenerator {
 		}
 		String query="select * from "+tableName+" where "+patientIDColumn+"="+patientID;
 		// ClinicalDocument.Component.Section.Entry.Observation.EffectiveTime et=new ClinicalDocument.Component.Section.Entry.Observation.EffectiveTime();
-		System.out.println(query);
+		// System.out.println(query);
 		try{
 			try (PreparedStatement selectStmt = con.prepareStatement(
              query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -145,18 +157,77 @@ public class CDAGenerator {
             		continue;
             	}
             	if(column.getBoolean("is_encoded")){
+
+
+
             		ClinicalDocument.Component.Section.Entry.Observation.Code code=new ClinicalDocument.Component.Section.Entry.Observation.Code();
             		code.setCode(column.getString("columnNameCode"));
             		code.setDisplayName(columnName);
-            		code.setCodeSystem(column.getString("columnNameCodeSystem"));
-            		code.setCodeSystemName("");
+            		String columnNameCodeSystem=column.getString("columnNameCodeSystem");
+            		code.setCodeSystemName(columnNameCodeSystem);
+
+            		//get codeSystem UID
+            		
+            		BasicDBObject cs_query=new BasicDBObject("codeSystemName",columnNameCodeSystem);
+         
+			        DBCursor cursor = coll.find(cs_query);
+			        
+			         
+					 
+				   if(cursor.hasNext()) {
+				   		String codeSystemObject=cursor.next().toString();
+
+		   				JSONObject obj = new JSONObject(codeSystemObject);
+				   		String codeSystem=obj.getString("codeSystem");
+				   		
+						code.setCodeSystem(codeSystem);	
+
+				   }
+				   else{
+				   	code.setCodeSystem("");
+				   }
+
+            		
             		obs.setCode(code);
 
             		ClinicalDocument.Component.Section.Entry.Observation.Value val=new ClinicalDocument.Component.Section.Entry.Observation.Value();
             		val.setCode(value);
-            		val.setCodeSystem(column.getString("columnValuesCodeSystem"));
-            		val.setDisplayName("");
+            		String columnValuesCodeSystem=column.getString("columnValuesCodeSystem");
+            		val.setCodeSystemName(columnValuesCodeSystem);
             		val.setType("CD");
+
+            		cs_query=new BasicDBObject("codeSystemName",columnValuesCodeSystem);
+            		cursor=coll.find(cs_query);
+            		if(cursor.hasNext()) {
+				   		String codeSystemObject=cursor.next().toString();
+
+		   				JSONObject obj = new JSONObject(codeSystemObject);
+				   		String codeSystem=obj.getString("codeSystem");
+				   		
+						val.setCodeSystem(codeSystem);	
+
+				   }
+				   else{
+				   	val.setCodeSystem("");
+				   }
+				   
+				   BasicDBObject dn_query=new BasicDBObject("codeSystemName",columnValuesCodeSystem);
+            		cursor=coll.find(dn_query);
+            		if(cursor.hasNext()) {
+				   		String codeSystemObject=cursor.next().toString();
+				   		JSONObject obj = new JSONObject(codeSystemObject);
+				   		String displayName=obj.getJSONObject("codes").getString(value);
+				   		System.out.println("dn:"+displayName);
+						val.setDisplayName(displayName);
+
+
+				   }
+				   else{
+				   	val.setDisplayName("");
+				   }
+
+            		
+            		
             		obs.setValue(val);
 
             	}
