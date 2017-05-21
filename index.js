@@ -263,8 +263,11 @@ app.post("/cda", isAuthenticated,function(req,res){
                         if(err){
                             console.log(stderror)
                         }
-                        console.log(stdout)
-                        res.send("Ok")
+                        else{
+                          console.log(stdout)
+                          res.sendfile(path.join(__dirname,"java",unique_file)) 
+                        }
+                        
                     })
 })
 

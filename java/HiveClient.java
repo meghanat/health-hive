@@ -101,6 +101,7 @@ public class HiveClient {
 			System.out.println("Table dropped");
 
 			
+			stmt.execute("SET hive.support.sql11.reserved.keywords=false");
 			
 			System.out.println("\ntable creation: "+query);
 			stmt.execute(query);
