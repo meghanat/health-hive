@@ -506,7 +506,7 @@ public class ClinicalDocument {
     public static class Component {
 
         @XmlElement(required = true)
-        protected ClinicalDocument.Component.Section section;
+        protected ClinicalDocument.Component.Section section=null;
 
         /**
          * Gets the value of the section property.
@@ -637,7 +637,7 @@ public class ClinicalDocument {
             @XmlElement(required = true)
             protected ClinicalDocument.Component.Section.Code code;
             @XmlElement(required = true)
-            protected String title;
+            protected String title="";
             protected List<ClinicalDocument.Component.Section.Entry> entry;
 
             /**
@@ -1161,7 +1161,7 @@ public class ClinicalDocument {
                     public static class Code {
 
                         @XmlElement(required = true)
-                        protected String originalText;
+                        protected String originalText=null;
                         @XmlAttribute(name = "code")
                         protected String code;
                         @XmlAttribute(name = "codeSystem")
