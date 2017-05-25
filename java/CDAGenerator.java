@@ -93,14 +93,14 @@ public class CDAGenerator {
 
 	}
   
-  public static ClinicalDocument.Component createComponent(JSONObject table,String patientID,Connection con){
+  public static void addComponent(JSONObject table,String patientID,Connection con,List<ClinicalDocument.Component> componentList){
   // public static void createComponent(JSONObject table,String patientID,Connection con){
 
   	try
   	{
 	  	String tableName=table.getString("name");
-	  	ClinicalDocument.Component component= new ClinicalDocument.Component();
-	  	ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
+	  	// ClinicalDocument.Component component= new ClinicalDocument.Component();
+	  	// ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
 
 	  	//open mongodb connection for fetching codesystem data
 	  	//get metadata for user
@@ -112,10 +112,6 @@ public class CDAGenerator {
          DBCollection coll = db.getCollection("codesystem");
          // System.out.println("Collection codesystem selected successfully");
 
-         
-
-	  	component.setSection(section);
-	  	section.setTitle(tableName);
 		String patientIDColumn=null;
 		// String effectiveTimeColumn=null;
 		// String effectiveTimeValue=null;
@@ -146,6 +142,11 @@ public class CDAGenerator {
         }
         else {
           while (rs.next()) {
+          	ClinicalDocument.Component component= new ClinicalDocument.Component();
+		  	ClinicalDocument.Component.Section section=new ClinicalDocument.Component.Section();
+
+		  	component.setSection(section);
+	  		section.setTitle(tableName);
             for (int i = 1; i < rs.getMetaData().getColumnCount() + 1; i++) {
             	String columnName=rs.getMetaData().getColumnName(i).split("\\.")[1];
             	String value=rs.getObject(i).toString();
@@ -246,10 +247,11 @@ public class CDAGenerator {
             	entry.setObservation(obs);
             	section.getEntry().add(entry);
             }
+            componentList.add(component);
           }
         }
       }
-      return component;
+      return ;
     }
     catch (SQLException e) {
       throw new RuntimeException(e);
@@ -259,7 +261,7 @@ public class CDAGenerator {
 	catch(Exception e){
 		e.printStackTrace();
 	}	
-	return null;		
+	return;		
 
  }
   
@@ -333,7 +335,7 @@ public class CDAGenerator {
          BasicDBObject query=new BasicDBObject("organisation",databaseName);
          
          DBCursor cursor = coll.find(query);
-         List<ClinicalDocument.Component> componentList=new ArrayList<ClinicalDocument.Component>();	
+         // List<ClinicalDocument.Component> componentList=new ArrayList<ClinicalDocument.Component>();	
          
 		 try {
 		   if(cursor.hasNext()) {
@@ -346,7 +348,7 @@ public class CDAGenerator {
 				{
 				    
 				    JSONObject table = tables.getJSONObject(i);
-				    doc.getComponent().add(createComponent(table,patientID,con));
+				    addComponent(table,patientID,con,doc.getComponent());
 				}
 				
 

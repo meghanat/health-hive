@@ -17,21 +17,6 @@
     </recordTarget>
     <component>
         <section>
-            <title>activities_ayur_consultant</title>
-        </section>
-    </component>
-    <component>
-        <section>
-            <title>admission_demographic</title>
-        </section>
-    </component>
-    <component>
-        <section>
-            <title>admission_environmental</title>
-        </section>
-    </component>
-    <component>
-        <section>
             <title>baseline_comorbidities_data</title>
             <entry>
                 <Observation>
@@ -176,9 +161,6 @@
             </entry>
         </section>
     </component>
-    <component xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
-    <component xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
-    <component xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
     <component>
         <section>
             <title>followup_oralmedication_details</title>
@@ -434,6 +416,11 @@
                     </value>
                 </Observation>
             </entry>
+        </section>
+    </component>
+    <component>
+        <section>
+            <title>followup_oralmedication_details</title>
             <entry>
                 <Observation>
                     <code>
@@ -688,7 +675,6 @@
             </entry>
         </section>
     </component>
-    <component xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
     <component>
         <section>
             <title>followup_yoga_details</title>
@@ -824,6 +810,11 @@
                     </value>
                 </Observation>
             </entry>
+        </section>
+    </component>
+    <component>
+        <section>
+            <title>followup_yoga_details</title>
             <entry>
                 <Observation>
                     <code>
