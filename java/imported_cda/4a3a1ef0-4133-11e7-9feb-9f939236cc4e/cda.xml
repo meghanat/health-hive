@@ -12,7 +12,7 @@
     </custodian>
     <recordTarget>
         <patientRole>
-            <id extension="18" root="iad"/>
+            <id extension="20" root="iad"/>
         </patientRole>
     </recordTarget>
     <component>
@@ -950,3 +950,4 @@
         </section>
     </component>
 </ClinicalDocument>
+

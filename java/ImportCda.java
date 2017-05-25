@@ -198,6 +198,7 @@ public class ImportCda {
         columnValues += patientID+")";
         
         String query="INSERT INTO "+tableName+" "+columnNames+" VALUES "+columnValues;
+        System.out.println(query);
         try{
 
           String connectionString="jdbc:hive2://localhost:10000/test";
@@ -221,10 +222,10 @@ public class ImportCda {
    */
   public static void main(String[] args) throws JAXBException {
     
-    File file=new File("sampleCDA.xml");
+    File file=new File(args[1]+"/cda.xml");
     ClinicalDocument doc = JAXBXMLHandler.unmarshal(file);
 
-    String databaseName="iad";
+    String databaseName=args[0];
 
     String patientID=doc.getRecordTarget().getPatientRole().getId().getExtension();
 

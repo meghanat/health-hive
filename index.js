@@ -271,6 +271,38 @@ app.post("/cda", isAuthenticated,function(req,res){
                     })
 })
 
+app.get('/importCDA', function(req, res) {
+    res.sendfile(path.join(__dirname, 'public', 'cda_import', 'cdaupload.html'));
+})
+
+app.post("/importCDA",isAuthenticated,function(req,res){
+  if (!req.files)
+        return res.status(400).send('No files were uploaded.');
+  cdaFile = req.files.cdaImport;//data file
+  unique_folder = "imported_cda/" + uuidV1()
+  folder_path="java/"+unique_folder;
+  if (!fs.existsSync(folder_path)) {
+        fs.mkdirSync(folder_path);
+        file_path=folder_path+"/cda.xml"
+        cdaFile.mv(file_path,function(err){
+
+          if(err){
+            console.log("could not move cda file")
+          }
+        })
+        command="java ImportCda iad "+unique_folder;
+        exec(command, {
+                  cwd: "java"
+              }, function(err, stdout, stderror) {
+                if(err){
+                  console.log(stderror)
+                }
+                console.log(stdout)
+                  
+              })
+        res.sendfile(path.join(__dirname, 'public', 'cda_import', 'success.html'));
+      }})
+
 
 //upload data
 app.post('/data', isAuthenticated ,function(req, res) {
