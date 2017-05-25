@@ -1,5 +1,13 @@
 
 import cda.*;
+
+import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.DriverManager;
+
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -189,7 +197,19 @@ public class ImportCda {
         columnNames+=patientIDColumn+")";
         columnValues += patientID+")";
         
-        System.out.println("\nINSERT INTO "+tableName+" "+columnNames+" VALUES "+columnValues);
+        String query="INSERT INTO "+tableName+" "+columnNames+" VALUES "+columnValues;
+        try{
+
+          String connectionString="jdbc:hive2://localhost:10000/test";
+          Connection con = DriverManager.getConnection(connectionString, "root", "hadoop");
+          Statement stmt = con.createStatement();
+          stmt.execute("SET hive.support.sql11.reserved.keywords=false");
+          stmt.execute(query);  
+        }
+        catch(Exception e){
+          e.printStackTrace();
+        }
+        
       }
     }
   }
