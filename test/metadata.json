@@ -1,0 +1,59 @@
+{
+	"organisation":"testing",
+	"tables":[
+			{
+				"name":"sampleA",
+			 	"filename":"sampleA.csv",
+				"columns":{
+						
+						"id":{
+
+								 "is_encoded": false,
+			                    "is_patient_id": true,
+			                    "description": "",
+			                    "columnValuesCodeSystem": "",
+			                    "columnNameCode": "",
+			                    "columnNameCodeSystem": ""						
+						},
+						"name":{
+
+							 "is_encoded": false,
+			                    "is_patient_id": false,
+			                    "description": "",
+			                    "columnValuesCodeSystem": "",
+			                    "columnNameCode": "",
+			                    "columnNameCodeSystem": ""	
+						}
+
+				}
+			},
+			{
+				"name":"sampleB",
+			 	"filename":"sampleB.csv",
+			 	"columns":{
+						
+						"id":{
+
+								 "is_encoded": false,
+			                    "is_patient_id": true,
+			                    "description": "",
+			                    "columnValuesCodeSystem": "",
+			                    "columnNameCode": "",
+			                    "columnNameCodeSystem": ""						
+						},
+						"name":{
+
+							 "is_encoded": false,
+			                    "is_patient_id": false,
+			                    "description": "",
+			                    "columnValuesCodeSystem": "",
+			                    "columnNameCode": "",
+			                    "columnNameCodeSystem": ""	
+						}
+
+				}
+
+			}
+			
+		]
+}

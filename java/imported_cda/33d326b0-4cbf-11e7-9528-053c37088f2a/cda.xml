@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ClinicalDocument>
+    <id extension="0" root="0"/>
+    <title>Patient Health Record</title>
+    <custodian>
+        <assignedCustodian>
+            <representedCustodianOrganization>
+                <id extension="iad" root="0"/>
+                <name>iad</name>
+            </representedCustodianOrganization>
+        </assignedCustodian>
+    </custodian>
+    <recordTarget>
+        <patientRole>
+            <id extension="75" root="iad"/>
+        </patientRole>
+    </recordTarget>
+    <component>
+        <section>
+            <title>baseline_dr_counselor</title>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>date</originalText>
+                    </code>
+                    <value>
+                        <originalText>Sun Jul 09 2006 00:00:00 GMT+0530 (IST)</originalText>
+                    </value>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>suggested_days</originalText>
+                    </code>
+                    <value>
+                        <originalText>15 Days</originalText>
+                    </value>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>iad_dr_impression</originalText>
+                    </code>
+                    <value>
+                        <originalText>Not available</originalText>
+                    </value>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>emotional_support</originalText>
+                    </code>
+                    <value>
+                        <originalText>No</originalText>
+                    </value>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>major_queries_doubts</originalText>
+                    </code>
+                    <value>
+                        <originalText>No</originalText>
+                    </value>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>counselors_note</originalText>
+                    </code>
+                    <value>
+                        <originalText>Not available</originalText>
+                    </value>
+                </Observation>
+            </entry>
+            <entry>
+                <Observation>
+                    <code>
+                        <originalText>any_other_information</originalText>
+                    </code>
+                    <value>
+                        <originalText>Not available</originalText>
+                    </value>
+                </Observation>
+            </entry>
+        </section>
+    </component>
+</ClinicalDocument>
